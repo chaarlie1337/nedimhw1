@@ -350,7 +350,6 @@ namespace DMV_GUI
             this.radioButtonMotorcycle.TabStop = true;
             this.radioButtonMotorcycle.Text = "Motorcycle";
             this.radioButtonMotorcycle.UseVisualStyleBackColor = true;
-            this.radioButtonMotorcycle.CheckedChanged += new System.EventHandler(this.radioButtonMotorcycle_CheckedChanged);
             // 
             // rbTaxi
             // 

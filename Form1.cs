@@ -13,7 +13,7 @@ namespace DMV_GUI
 {
     public partial class Form1 : Form
     {
-        //FIRST TASK FROM THE E MAIl
+
         MotorVehicle[] vehicleArray = new MotorVehicle[50]; //Define Array of MotorVehicle objects
         int mvArrayCounter = 0; //Initialize array counter  
         public static string textFile = "log-"+(DateTime.Now.ToString("dd-MM-yyyy"))+".txt"; //Define dynamic time-dependant name of textfile
@@ -33,13 +33,45 @@ namespace DMV_GUI
                 fileStream.Close(); //Close the file, so that other methods can acces it
             }
 
-            //THIS HERE IS SECOND TASK YOU GAVE ME
-            if (!Directory.Exists(@"C:\MyDir\")) Directory.CreateDirectory(@"C:\MyDir\");
+
+
+            if (!Directory.Exists(@"C:\OldFiles\")) Directory.CreateDirectory(@"C:\OldFiles\");
             string[] txtFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.txt");
             foreach (string fname in txtFiles)
             {
+                DateTime d = File.GetLastWriteTime(fname);
   
-                File.Move(fname,@"C:\MyDir\"+Path.GetFileNameWithoutExtension(fname)+"Nedim"+Path.GetExtension(fname));
+                if (d > DateTime.Now.AddHours(-24))
+                {
+                    FileStream file = new FileStream(fname, FileMode.Append, FileAccess.Write);
+                    try
+                    {
+                        StreamWriter writer = new StreamWriter(file);
+                        try
+                        {
+                            writer.WriteLine("------- Below is text created after " + DateTime.Now.ToString("dd-MM-yyyy") + " ----------------");
+                            writer.WriteLine("This is a test line");
+                            writer.Close();
+                        }
+                        catch
+                        { }
+                        finally
+                        {
+                            writer.Dispose();
+                        }
+                    }
+                    catch { }
+                    finally
+                    {
+                        file.Close();
+                        file.Dispose();
+                    }
+
+                } else
+                {
+                     File.Move(fname, @"C:\OldFiles\"); 
+                }
+
             }
         }
 
@@ -98,20 +130,37 @@ namespace DMV_GUI
             
             rtLog.Clear();
 
+           
+
             foreach(MotorVehicle m in vehicleArray) //Display and store in textfile
             {
                 if (m != null)
                 {
                     rtLog.AppendText(m.show() + "\n\n");
-                    using (FileStream file = new FileStream(textFile, FileMode.Append, FileAccess.Write))
+                    FileStream file = new FileStream(textFile, FileMode.Append, FileAccess.Write);
+                    try
                     {
-                        using (StreamWriter writer = new StreamWriter(file))
+                        StreamWriter writer = new StreamWriter(file);
+                        try 
                         {
                             writer.WriteLine(m.show());
                             writer.Close();
                         }
-                        file.Close();  
+                        catch
+                        { }
+                        finally
+                        {
+                            writer.Dispose();
+                        }
                     }
+                    catch { }
+                    finally
+                    {
+                        file.Close();  
+                        file.Dispose();
+                    }
+
+
                     
                 }
             }
@@ -151,11 +200,6 @@ namespace DMV_GUI
         }
 
         private void tbVIN_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void radioButtonMotorcycle_CheckedChanged(object sender, EventArgs e)
         {
 
         }        
