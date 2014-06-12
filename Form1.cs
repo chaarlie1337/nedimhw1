@@ -53,14 +53,16 @@ namespace DMV_GUI
                             writer.WriteLine("This is a test line");
                             writer.Close();
                         }
-                        catch
-                        { }
+                        catch (Exception exc)
+                        { throw exc; }
                         finally
                         {
                             writer.Dispose();
                         }
                     }
-                    catch { }
+                    catch (Exception exc) {
+                        throw exc;
+                    }
                     finally
                     {
                         file.Close();
@@ -146,14 +148,19 @@ namespace DMV_GUI
                             writer.WriteLine(m.show());
                             writer.Close();
                         }
-                        catch
-                        { }
+                        catch (Exception exc)
+                        { 
+                            throw exc;
+                        }
                         finally
                         {
                             writer.Dispose();
                         }
                     }
-                    catch { }
+                    catch (Exception exc)
+                    {
+                        throw exc;
+                    }
                     finally
                     {
                         file.Close();  
